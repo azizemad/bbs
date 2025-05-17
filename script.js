@@ -481,21 +481,58 @@
         </div>
     `;
     
-    // إعداد أزرار المكالمة
-    document.getElementById('voice-call-btn').onclick = () => {
-        if (voiceCall) {
-            voiceCall.startCall(friendId);
-        } else {
-            showNotification('نظام المكالمات غير جاهز', 'error');
-        }
-    };
+    // إظهار زر إزالة الصديق وزر المكالمة
+    document.getElementById('chat-actions').style.display = 'flex';
+    document.getElementById('remove-friend-btn').onclick = () => removeFriend(friendId);
+    document.getElementById('voice-call-btn').onclick = () => voiceCall.startCall(friendId);
+    document.getElementById('video-call-btn').onclick = () => showNotification('سيتم إضافة مكالمات الفيديو قريباً', 'info');
     
- // بدء مكالمة فيديو
+    // إظهار حقل إدخال الرسائل
+    document.getElementById('message-input-container').style.display = 'flex';
+    
+    // إعداد زر العودة
+    document.querySelector('.back-to-friends').addEventListener('click', backToFriends);
+    
+    // تحميل الرسائل
+    loadMessages(friendId);
+    
+    // تحديث حالة الصديق عند التغيير
+    database.ref('users/' + friendId).on('value', snapshot => {
+        const updatedFriendData = snapshot.val();
+        if (updatedFriendData) {
+            const statusElement = chatUserInfo.querySelector('.user-status');
+            if (statusElement) {
+                statusElement.textContent = updatedFriendData.online ? 'متصل الآن' : 'غير متصل';
+            }
+            
+            // تحديث حالة الصديق في القائمة
+            const friendItems = document.querySelectorAll('.friend-item');
+            friendItems.forEach(item => {
+                if (item.querySelector('img').alt === updatedFriendData.username) {
+                    const onlineStatus = item.querySelector('.online-status');
+                    if (updatedFriendData.online) {
+                        if (!onlineStatus) {
+                            item.insertAdjacentHTML('beforeend', '<span class="online-status"></span>');
+                        }
+                    } else if (onlineStatus) {
+                        onlineStatus.remove();
+                    }
+                }
+            });
+        }
+    });
+}
+        // بدء مكالمة صوتية
+       function startVoiceCall(friendId) {
+    voiceCall.startCall(friendId);
+}
+
+        // بدء مكالمة فيديو
         function startVideoCall(friendId) {
             showNotification('جاري بدء مكالمة الفيديو...');
             // هنا يمكنك إضافة كود لبدء مكالمة الفيديو باستخدام WebRTC أو أي خدمة أخرى
         }
-    }
+
         // تحميل الرسائل
         function loadMessages(friendId) {
             const messagesContainer = document.getElementById('messages-container-full');
