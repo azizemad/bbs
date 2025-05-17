@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دردشة متطورة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- صفحة الدخول المحدثة -->
+    <div id="auth-container" class="container">
+        <div class="auth-box">
+            <div class="auth-header">
+                <img src="https://firebasestorage.googleapis.com/v0/b/football-az-5a50d.appspot.com/o/images.jpeg?alt=media&token=4a85092c-5b0e-4c75-ac9f-157388574ed6" alt="شعار التطبيق" class="logo">
+                <h1>مرحبًا بك في دردشتنا</h1>
+                <p>سجل الدخول أو أنشئ حسابًا للبدء في التواصل مع الأصدقاء</p>
+            </div>
+            
+            <div id="login-form">
+                <div class="form-group">
+                    <input type="email" id="login-email" class="form-control" placeholder="البريد الإلكتروني" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="login-password" class="form-control" placeholder="كلمة المرور" required>
+                </div>
+                <button id="login-btn" class="btn btn-primary ripple" style="width: 100%;">
+                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                </button>
+                <button id="signup-toggle" class="btn btn-secondary ripple" style="width: 100%;">
+                    <i class="fas fa-user-plus"></i> إنشاء حساب جديد
+                </button>
+            </div>
+            
+            <div id="signup-form" style="display: none;">
+                <div class="form-group">
+                    <input type="email" id="signup-email" class="form-control" placeholder="البريد الإلكتروني" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="signup-password" class="form-control" placeholder="كلمة المرور" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="signup-confirm-password" class="form-control" placeholder="تأكيد كلمة المرور" required>
+                </div>
+                <button id="signup-btn" class="btn btn-primary ripple" style="width: 100%;">
+                    <i class="fas fa-user-plus"></i> إنشاء حساب
+                </button>
+                <button id="login-toggle" class="btn btn-secondary ripple" style="width: 100%;">
+                    <i class="fas fa-sign-in-alt"></i> لديك حساب بالفعل؟
+                </button>
+            </div>
+            
+            <div class="auth-footer">
+                <p>بالاستمرار، أنت توافق على <a href="#">شروط الخدمة</a> و<a href="#">سياسة الخصوصية</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- صفحة معلومات المستخدم المحدثة -->
+    <div id="profile-setup-container" class="container" style="display: none;">
+        <div class="profile-box">
+            <div class="auth-header">
+                <h1>أكمل ملفك الشخصي</h1>
+                <p>أكمل المعلومات التالية لبدء استخدام التطبيق</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="username">اسم المستخدم (ثلاثي)</label>
+                <input type="text" id="username" class="form-control" placeholder="الاسم الكامل" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="user-handle">يوزر خاص (مثال: @user)</label>
+                <input type="text" id="user-handle" class="form-control" placeholder="@username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">رقم الهاتف</label>
+                <input type="tel" id="phone" class="form-control" placeholder="01XXXXXXXXX" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="birthdate">تاريخ الميلاد</label>
+                <input type="date" id="birthdate" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="profile-pic">صورة الملف الشخصي</label>
+                <input type="file" id="profile-pic" accept="image/*" style="display: none;">
+                <div class="image-preview" id="image-preview">
+                    <div class="edit-overlay">تغيير الصورة</div>
+                </div>
+            </div>
+            
+            <button id="save-profile-btn" class="btn btn-primary ripple" style="width: 100%;">
+                <i class="fas fa-save"></i> حفظ المعلومات
+            </button>
+        </div>
+    </div>
+    
+    <!-- صفحة قائمة الأصدقاء المحدثة -->
+    <div id="friends-container" style="display: none;">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="user-info" id="sidebar-user-info">
+                    <img id="sidebar-user-img" src="" alt="صورة المستخدم">
+                    <div>
+                        <div class="user-name" id="sidebar-user-name"></div>
+                        <div class="user-status" id="sidebar-user-status">متصل الآن</div>
+                    </div>
+                </div>
+                <button id="settings-btn" class="icon-btn ripple"><i class="fas fa-cog"></i></button>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" id="friend-search" class="search-input" placeholder="ابحث عن أصدقاء...">
+                <button id="search-btn" class="icon-btn ripple"><i class="fas fa-search"></i></button>
+            </div>
+            
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="friends">
+                    <i class="fas fa-user-friends"></i> الأصدقاء
+                    <span class="badge" id="unread-count" style="display: none;">0</span>
+                </button>
+                <button class="tab-btn" data-tab="requests">
+                    <i class="fas fa-user-plus"></i> الطلبات
+                    <span class="badge" id="requests-count" style="display: none;">0</span>
+                </button>
+                <button class="tab-btn" data-tab="wallet">
+                    <i class="fas fa-wallet"></i> المحفظة
+                </button>
+            </div>
+            
+            <div class="tab-content active" id="friends-tab">
+                <div class="friends-list" id="friends-list">
+                    <p class="no-friends">لا يوجد أصدقاء حتى الآن</p>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="requests-tab">
+                <div class="requests-list" id="requests-list">
+                    <p class="no-requests">لا توجد طلبات صداقة</p>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="wallet-tab">
+                <div class="wallet-info">
+                    <h3>رصيدك الحالي</h3>
+                    <p id="wallet-balance">0 جنيه</p>
+                    <div class="wallet-actions">
+                        <button id="charge-wallet-btn" class="btn btn-primary ripple">
+                            <i class="fas fa-coins"></i> شحن المحفظة
+                        </button>
+                        <button id="withdraw-btn" class="btn btn-secondary ripple">
+                            <i class="fas fa-money-bill-wave"></i> سحب الرصيد
+                        </button>
+                        <button id="send-money-btn" class="btn btn-success ripple">
+                            <i class="fas fa-paper-plane"></i> إرسال أموال
+                        </button>
+                    </div>
+                </div>
+                <div class="transactions-list" id="transactions-list">
+                    <p class="no-transactions">لا توجد معاملات حتى الآن</p>
+                </div>
+            </div>
+        </div>
+            <div class="messages-container" id="messages-container">
+            </div>
+        </div>
+    </div>
+    
+    <!-- صفحة الدردشة الرئيسية المحدثة -->
+    <div id="chat-container">
+        <div class="chat-area">
+            <div class="chat-header">
+                <i class="fas fa-arrow-right back-to-friends"></i>
+                <div class="chat-user-info" id="chat-user-info-full"></div>
+                <div class="chat-actions" id="chat-actions">
+                    <button id="voice-call-btn" class="icon-btn ripple"><i class="fas fa-phone-alt"></i></button>
+                    <button id="video-call-btn" class="icon-btn ripple"><i class="fas fa-video"></i></button>
+                    <button id="remove-friend-btn" class="icon-btn ripple danger"><i class="fas fa-user-times"></i></button>
+                </div>
+            </div>
+            
+            <div class="messages-container" id="messages-container-full"></div>
+            
+            <div class="message-input-container" id="message-input-container">
+                <button id="attachment-btn" class="icon-btn ripple"><i class="fas fa-paperclip"></i></button>
+                <div class="attachment-menu" id="attachment-menu">
+                    <div class="attachment-option" data-type="image">
+                        <i class="fas fa-image"></i>
+                        <span>صورة</span>
+                    </div>
+                    <div class="attachment-option" data-type="audio">
+                        <i class="fas fa-microphone"></i>
+                        <span>تسجيل صوتي</span>
+                    </div>
+                    <div class="attachment-option" data-type="file">
+                        <i class="fas fa-file"></i>
+                        <span>ملف</span>
+                    </div>
+                </div>
+                <div class="message-input-wrapper">
+                    <input type="text" id="message-input" class="message-input" placeholder="اكتب رسالة هنا...">
+                    <button id="emoji-btn" class="icon-btn ripple"><i class="far fa-smile"></i></button>
+                </div>
+                <button id="send-btn" class="icon-btn ripple"><i class="fas fa-paper-plane"></i></button>
+                <input type="file" id="file-input" accept="image/*,audio/*,video/*,.pdf,.doc,.docx,.xls,.xlsx" style="display: none;">
+                <input type="file" id="image-input" accept="image/*" capture="environment" style="display: none;">
+                <input type="file" id="audio-input" accept="audio/*" capture="user" style="display: none;">
+            </div>
+        </div>
+    </div>
+    
+    <!-- نوافذ منبثقة محدثة -->
+    <!-- نافذة البحث عن أصدقاء المحدثة -->
+    <div id="search-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-search"></i> بحث عن أصدقاء</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="search-type">طريقة البحث</label>
+                <select id="search-type" class="form-control">
+                    <option value="id">بحث بالـ ID</option>
+                    <option value="phone">بحث برقم الهاتف</option>
+                    <option value="handle">بحث باليوزر</option>
+                    <option value="name">بحث بالاسم</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="search-query">كلمة البحث</label>
+                <input type="text" id="search-query" class="form-control" placeholder="أدخل كلمة البحث...">
+            </div>
+            
+            <button id="execute-search" class="btn btn-primary ripple" style="width: 100%;">
+                <i class="fas fa-search"></i> بحث
+            </button>
+            
+            <div class="search-results" id="search-results">
+                <p class="no-results" style="text-align: center; padding: 20px; color: var(--dark-gray);">ستظهر نتائج البحث هنا</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- نافذة شحن المحفظة المحدثة -->
+    <div id="charge-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-coins"></i> شحن المحفظة</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="charge-amount">المبلغ المطلوب شحنه</label>
+                <input type="number" id="charge-amount" class="form-control" placeholder="المبلغ بالجنيه">
+            </div>
+            
+            <div class="form-group">
+                <label>طريقة الشحن</label>
+                <div style="background: var(--background); padding: 15px; border-radius: var(--border-radius-sm); margin-top: 10px;">
+                    <p style="margin-bottom: 10px;">لشحن المحفظة، يرجى تحويل المبلغ إلى الرقم التالي:</p>
+                    <p class="highlight" style="font-size: 1.4rem; font-weight: bold; margin-bottom: 15px;">01206622787</p>
+                    <p style="margin-bottom: 10px;">ثم أدخل الرقم المرسل منه أدناه:</p>
+                    <input type="text" id="sender-phone" class="form-control" placeholder="الرقم المرسل منه">
+                </div>
+            </div>
+            
+            <button id="submit-charge" class="btn btn-primary ripple" style="width: 100%;">
+                <i class="fas fa-check"></i> تأكيد الشحن
+            </button>
+        </div>
+    </div>
+    
+    <!-- نافذة سحب الأموال المحدثة -->
+    <div id="withdraw-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-money-bill-wave"></i> سحب الرصيد</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="withdraw-amount">المبلغ المطلوب سحبه</label>
+                <input type="number" id="withdraw-amount" class="form-control" placeholder="المبلغ بالجنيه">
+            </div>
+            
+            <div class="form-group">
+                <label for="withdraw-phone">رقم فودافون كاش</label>
+                <input type="text" id="withdraw-phone" class="form-control" placeholder="01XXXXXXXXX">
+            </div>
+            
+            <div class="alert alert-info" style="background: var(--background); padding: 12px; border-radius: var(--border-radius-sm); margin-bottom: 20px;">
+                <i class="fas fa-info-circle" style="color: var(--primary-color); margin-left: 5px;"></i>
+                <span>ملاحظة: سيتم مراجعة طلب السحب من قبل الإدارة وقد يستغرق ذلك حتى 24 ساعة</span>
+            </div>
+            
+            <button id="submit-withdraw" class="btn btn-primary ripple" style="width: 100%;">
+                <i class="fas fa-check"></i> تأكيد السحب
+            </button>
+        </div>
+    </div>
+    
+    <!-- نافذة إرسال أموال المحدثة -->
+    <div id="send-money-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-paper-plane"></i> إرسال أموال</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="recipient-search">ابحث عن المستلم</label>
+                <input type="text" id="recipient-search" class="form-control" placeholder="ابحث بالاسم أو اليوزر">
+                <div class="search-results" id="recipient-results" style="margin-top: 10px;"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="send-amount">المبلغ</label>
+                <input type="number" id="send-amount" class="form-control" placeholder="المبلغ بالجنيه">
+            </div>
+            
+            <button id="submit-send" class="btn btn-primary ripple" style="width: 100%;">
+                <i class="fas fa-paper-plane"></i> إرسال
+            </button>
+        </div>
+    </div>
+    
+    <!-- نافذة الإعدادات المحدثة -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-cog"></i> الإعدادات</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            
+            <div class="settings-tabs">
+                <button class="settings-tab-btn active" data-tab="profile-settings">
+                    <i class="fas fa-user"></i></button>
+            </div>
+            
+            <div class="settings-tab-content active" id="profile-settings">
+                <div class="form-group">
+                    <label for="settings-profile-pic">صورة الملف الشخصي</label>
+                    <input type="file" id="settings-profile-pic" accept="image/*" style="display: none;">
+                    <div class="image-preview" id="settings-image-preview">
+                        <div class="edit-overlay">تغيير الصورة</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="settings-username">اسم المستخدم</label>
+                    <input type="text" id="settings-username" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label for="settings-user-handle">يوزر خاص</label>
+                    <input type="text" id="settings-user-handle" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label for="settings-status">الحالة</label>
+                    <input type="text" id="settings-status" class="form-control" placeholder="مثال: متصل الآن">
+                </div>
+                
+                <button id="save-profile-settings" class="btn btn-primary ripple" style="width: 100%;">
+                    <i class="fas fa-save"></i> حفظ التغييرات
+                </button>
+            </div>
+            
+            <div class="settings-tab-content" id="account-settings">
+                <div class="account-info" style="background: var(--background); padding: 15px; border-radius: var(--border-radius-sm); margin-bottom: 20px;">
+                    <p style="margin-bottom: 10px;"><strong><i class="fas fa-envelope"></i> البريد الإلكتروني:</strong> <span id="settings-email"></span></p>
+                    <p style="margin-bottom: 10px;"><strong><i class="fas fa-phone"></i> رقم الهاتف:</strong> <span id="settings-phone"></span></p>
+                    <p style="margin-bottom: 10px;"><strong><i class="fas fa-birthday-cake"></i> تاريخ الميلاد:</strong> <span id="settings-birthdate"></span></p>
+                    <p><strong><i class="fas fa-id-card"></i> معرف المستخدم:</strong> <span id="settings-user-id"></span></p>
+                </div>
+                
+                <button id="change-password-btn" class="btn btn-secondary ripple" style="width: 100%;">
+                    <i class="fas fa-key"></i> تغيير كلمة المرور
+                </button>
+            </div>
+            
+            <div class="settings-tab-content" id="security-settings">
+                <div class="form-group">
+                    <label for="current-password">كلمة المرور الحالية</label>
+                    <input type="password" id="current-password" class="form-control" placeholder="أدخل كلمة المرور الحالية">
+                </div>
+                
+                <div class="form-group">
+                    <label for="new-password">كلمة المرور الجديدة</label>
+                    <input type="password" id="new-password" class="form-control" placeholder="أدخل كلمة المرور الجديدة">
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm-new-password">تأكيد كلمة المرور الجديدة</label>
+                    <input type="password" id="confirm-new-password" class="form-control" placeholder="أعد إدخال كلمة المرور الجديدة">
+                </div>
+                
+                <button id="save-password" class="btn btn-primary ripple" style="width: 100%;">
+                    <i class="fas fa-save"></i> حفظ كلمة المرور الجديدة
+                </button>
+            </div>
+            
+            <div class="settings-tab-content" id="support-settings">
+                <div style="background: var(--background); padding: 20px; border-radius: var(--border-radius-sm); margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 15px;"><i class="fas fa-headset"></i> الدعم الفني</h3>
+                    <p style="margin-bottom: 15px;">للاستفسارات أو المشاكل الفنية، يرجى التواصل معنا عبر:</p>
+                    
+                    <button id="whatsapp-support" class="btn btn-success ripple" style="width: 100%; margin-bottom: 15px;">
+                        <i class="fab fa-whatsapp"></i> واتساب الدعم
+                    </button>
+                    
+                    <div class="emergency-contact" style="background: rgba(214, 48, 49, 0.1); padding: 15px; border-radius: var(--border-radius-sm);">
+                        <p style="margin-bottom: 10px; color: var(--danger-color); font-weight: 500;"><i class="fas fa-exclamation-triangle"></i> للحالات الطارئة:</p>
+                        <p class="highlight" style="font-size: 1.4rem; font-weight: bold;">01206622787</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- نافذة تغيير كلمة المرور المحدثة -->
+    <div id="change-password-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-key"></i> تغيير كلمة المرور</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="change-current-password">كلمة المرور الحالية</label>
+                <input type="password" id="change-current-password" class="form-control" placeholder="أدخل كلمة المرور الحالية">
+            </div>
+            
+            <div class="form-group">
+                <label for="change-new-password">كلمة المرور الجديدة</label>
+                <input type="password" id="change-new-password" class="form-control" placeholder="أدخل كلمة المرور الجديدة">
+            </div>
+            
+            <div class="form-group">
+                <label for="change-confirm-password">تأكيد كلمة المرور الجديدة</label>
+                <input type="password" id="change-confirm-password" class="form-control" placeholder="أعد إدخال كلمة المرور الجديدة">
+            </div>
+            
+            <button id="submit-password-change" class="btn btn-primary ripple" style="width: 100%;">
+                <i class="fas fa-check"></i> تغيير كلمة المرور
+            </button>
+        </div>
+    </div>
+    
+    <!-- نافذة معاينة الصورة المحدثة -->
+    <div id="image-preview-modal" class="modal">
+        <div class="modal-content" style="max-width: 90%; max-height: 90%; display: flex; justify-content: center; background: transparent; box-shadow: none;">
+            <span class="close-modal" style="position: fixed; top: 20px; left: 20px; color: white; font-size: 2.5rem; z-index: 10; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">&times;</span>
+            <img id="previewed-image" src="" alt="معاينة الصورة" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: var(--border-radius-sm); box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+        </div>
+    </div>
+    
+    <!-- شاشة التحميل المحدثة -->
+    <div id="loading-overlay">
+        <div class="loader"></div>
+    </div>
+    
+    <!-- إشعارات محدثة -->
+    <div id="notification" class="notification" style="display: none;">
+        <i class="fas fa-check-circle"></i>
+        <span id="notification-message"></span>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.3.2/dist/peerjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/simple-peer/9.11.1/simplepeer.min.js"></script>
+    <script src="voice-call.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
